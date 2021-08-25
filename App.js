@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Text, Button, Image, SafeAreaView, Dimensions, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Waffles from './Waffles'
 
 function HomeScreen({ navigation }) {
@@ -35,6 +36,8 @@ const LogoTitle = () => <Text>🧇</Text>
 
 const Stack = createNativeStackNavigator();
 
+const Tab = createBottomTabNavigator();
+
 function App() {
   const options = {
     headerStyle: {
@@ -47,6 +50,17 @@ function App() {
   }
 
   return <NavigationContainer>
+    <Tab.Navigator screenOptions={({ route }) => ({
+      tabBarIcon: () => <Text>{route.name === 'Home' ? '🏠' : '📃'}</Text>,
+      tabBarActiveTintColor: 'tomato',
+      tabBarInactiveTintColor: 'gray'
+    })}>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Details" component={DetailsScreen} />
+    </Tab.Navigator>
+  </NavigationContainer>
+
+  return <NavigationContainer>
     <Stack.Navigator screenOptions={options} initialRouteName="Home">
       <Stack.Screen name="Home" options={{title: 'Start'}} component={HomeScreen} />
       <Stack.Screen name="User" options={{
@@ -55,6 +69,7 @@ function App() {
       }} component={User} />
       <Stack.Screen name="Details" options={({ route }) => ({title: route.params.name})} component={DetailsScreen} />
     </Stack.Navigator>
+
   </NavigationContainer>  
 }
 
