@@ -1,34 +1,11 @@
 import * as React from 'react';
-import { View, Text, Button, Image, SafeAreaView, Dimensions, Pressable } from 'react-native';
+import { Text, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Waffles from './Waffles'
-
-function HomeScreen({ navigation }) {
-  return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Home Screen</Text>
-    <Button title="Go to Details" onPress={() => navigation.navigate('Details', {name: 'Custom profile header'})} />
-    <Button title="Go to User" onPress={() => navigation.navigate('User', {name: 'User #1'})} />
-  </View>
-}
-
-function DetailsScreen({ navigation }) {
-  const [ estado, setEstado ] = React.useState(false)
-
-  const actualizar = () => {
-    setEstado(true)
-    navigation.setOptions({ title: 'Updated!' })
-  }
-
-  return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Details Screen</Text>
-    {estado 
-      ? <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      : <Button title="Update the title" onPress={actualizar} />
-    }
-  </View>
-}
+import HomeScreen from './HomeScreen';
+import UserScreen from './UserScreen';
+import OptionsScreen from './OptionsScreen';
 
 const User = () => <Text>user</Text>
 
@@ -49,14 +26,19 @@ function App() {
     }
   }
 
+  const emojis = {HomeScreen:'🏠',UserScreen:'👤', OptionsScreen:'⚙'}
+
   return <NavigationContainer>
     <Tab.Navigator screenOptions={({ route }) => ({
-      tabBarIcon: () => <Text>{route.name === 'Home' ? '🏠' : '📃'}</Text>,
+      tabBarIcon: () => <Text>{emojis[route.name]}</Text>,
       tabBarActiveTintColor: 'tomato',
-      tabBarInactiveTintColor: 'gray'
+      tabBarActiveBackgroundColor: 'lightgrey',
+      tabBarInactiveTintColor: 'gray',
+      tabBarShowLabel: false
     })}>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Details" component={DetailsScreen} />
+      <Tab.Screen name="OptionsScreen" component={OptionsScreen} />
+      <Tab.Screen name="HomeScreen" component={HomeScreen} />
+      <Tab.Screen name="UserScreen" component={UserScreen} options={{ tabBarBadge: 3 }} />
     </Tab.Navigator>
   </NavigationContainer>
 
@@ -67,10 +49,9 @@ function App() {
         headerTitle: props => <LogoTitle {...props} />,
         headerRight: () => <Button onPress={() => alert('This is a button')} title="Info" color="#0000" />
       }} component={User} />
-      <Stack.Screen name="Details" options={({ route }) => ({title: route.params.name})} component={DetailsScreen} />
+      <Stack.Screen name="User" options={({ route }) => ({title: route.params.name})} component={UserScreen} />
     </Stack.Navigator>
-
-  </NavigationContainer>  
+  </NavigationContainer>
 }
 
-export default App;0
+export default App;
