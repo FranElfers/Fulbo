@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { Text, Button } from 'react-native';
+import { Text, Button, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './HomeScreen';
 import UserScreen from './UserScreen';
 import OptionsScreen from './OptionsScreen';
+import { BallIcon, OptionsIcon, UserIcon } from './SVG';
 
-const User = () => <Text>user</Text>
+const User = () => <View>
+  <Text>User</Text>
+</View>
 
 const LogoTitle = () => <Text>🧇</Text>
 
@@ -26,14 +29,21 @@ function App() {
     }
   }
 
-  const emojis = {HomeScreen:'🏠',UserScreen:'👤', OptionsScreen:'⚙'}
+  const emojis = {
+    HomeScreen: <BallIcon />,
+    UserScreen:<UserIcon />, 
+    OptionsScreen:<OptionsIcon />
+  }
 
   return <NavigationContainer>
     <Tab.Navigator screenOptions={({ route }) => ({
-      tabBarIcon: () => <Text>{emojis[route.name]}</Text>,
-      tabBarActiveTintColor: 'tomato',
-      tabBarActiveBackgroundColor: 'lightgrey',
-      tabBarInactiveTintColor: 'gray',
+      tabBarIcon: () => emojis[route.name],
+      tabBarStyle: {
+        padding: 10,
+        backgroundColor: '#2E3847',
+      },
+      tabBarActiveTintColor: 'white',
+      tabBarInactiveTintColor: '#606873',
       tabBarShowLabel: false
     })}>
       <Tab.Screen name="OptionsScreen" component={OptionsScreen} />
