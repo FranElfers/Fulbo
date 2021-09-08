@@ -10,6 +10,7 @@ import { BallIcon, OptionsIcon, UserIcon } from './SVG';
 
 const User = () => <View>
   <Text>User</Text>
+  <BallIcon />
 </View>
 
 const LogoTitle = () => <Text>🧇</Text>
