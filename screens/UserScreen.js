@@ -18,7 +18,7 @@ function UserScreen({ navigation, route }) {
 
   return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <Text>User Screen</Text>
-    <Image source={require('./assets/icon_user.svg')} />
+    <Image source={require('../assets/icon_user.svg')} />
     {estado 
       ? <Button title="Go to Home" onPress={() => navigation.navigate('HomeScreen')} />
       : <Button title="Update the name" onPress={actualizar} />
