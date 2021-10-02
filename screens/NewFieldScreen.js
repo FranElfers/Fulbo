@@ -3,6 +3,16 @@ import { View, Text, ScrollView, TextInput, StyleSheet, Button } from 'react-nat
 import db from '../database/firebase'
 import { collection, addDoc } from 'firebase/firestore'
 
+/*
+# How to Upload File/Image to Server
+https://aboutreact.com/file-uploading-in-react-native/
+
+# react-native-document-picker
+https://www.npmjs.com/package/react-native-document-picker
+
+No lo hago ahora porque seguramente no ande en web y todavia no me anda el firebase en mobile
+*/
+
 const NewFieldScreen = ({ navigation }) => {
 	const [ form, setForm ] = React.useState({
 		name: '',
@@ -23,7 +33,6 @@ const NewFieldScreen = ({ navigation }) => {
 	}
 
 	return <ScrollView style={styles.container}>
-		<Text>Agregar un nuevo potrero</Text>
 		<View style={styles.inputGroup}>
 			<TextInput placeholder="Nombre" onChangeText={value => handleChange('name',value)} />
 		</View>
