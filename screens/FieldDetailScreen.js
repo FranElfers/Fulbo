@@ -1,18 +1,18 @@
 import React from 'react'
 import { Text, View, StyleSheet, ScrollView, Image } from 'react-native'
-import { doc, getDoc } from 'firebase/firestore'
 import db from '../database/firebase'
 
 const FieldDetailScreen = ({ route, navigation }) => {
 	const [ field, setField ] = React.useState({})
-	const querySnapshot = async () => {
-		const docRef = doc(db, 'fields', route.params.fieldId)
-		const docSnap = await getDoc(docRef)
-		return { id: docSnap.id, ...docSnap.data() }
-	}
+
+	const fieldRef = db.collection('fields').doc(route.params.fieldId)
 
 	React.useEffect(() => {
-		querySnapshot().then(data => setField(data))
+		fieldRef.get().then(doc => {
+			setField(doc.data())
+			console.log(doc.exists ? 'Document data '+ doc.data().name : 'No such document')
+		})
+		// querySnapshot().then(data => setField(data))
 	}, [])
 
 	React.useEffect(() => {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 		bottom: 10,
 		left: 15,
 		color: '#fff',
-		fontSize: '1.5em',
+		fontSize: 24,
 	},
 	container: {
 		flex: 1,

@@ -1,5 +1,4 @@
-import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import firebase from 'firebase'
 
 const firebaseConfig = {
   apiKey: "AIzaSyCnSNgM6y0Z3FuWz5f_t3GyuM0SjHiKQPA",
@@ -10,7 +9,17 @@ const firebaseConfig = {
   appId: "1:1031763701111:web:93ae6ba82d20bb859a4572"
 };
 
+firebase.initializeApp(firebaseConfig)
+
+const db = firebase.firestore()
+
+/*
+"firebase 9"
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
+
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp)
+*/
 
 export default db

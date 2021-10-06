@@ -1,21 +1,20 @@
 import React from 'react'
 import { View, Text, ScrollView, StyleSheet, Button, Image } from 'react-native'
-import { collection, getDocs } from 'firebase/firestore'
 import db from '../database/firebase'
 
 const FieldListScreen = ({ navigation }) => {
 	const [ fieldList, setFieldList ] = React.useState([])
 
 	React.useEffect(() => {
-		const querySnapshot = async () => {
-			const docs = await getDocs(collection(db, 'fields'))
-			return docs
-		} 
-		querySnapshot().then(data => 
-			data.forEach(doc => {
-				setFieldList(prev => ([...prev, {id:doc.id, ...doc.data()}]))
+		// Esto es firebase 8 que es bastante pesado y poco intuitivo, expo no soporta 9
+		db.collection('fields').get()
+			.then(querySnapshot => {
+				querySnapshot.forEach(doc => {
+					setFieldList(prev => ([...prev, {id:doc.id, ...doc.data()}]))
+					console.log(doc.id, ' => ', doc.data())
+				})
 			})
-		)
+			.catch(err => console.log('Error getting documents'))
 	}, [])
 
 	return <ScrollView style={styles.container}>
@@ -34,7 +33,7 @@ const FieldListScreen = ({ navigation }) => {
 				source={{uri: 'https://www.haedosrl.com.ar/images/frontend/notfound.png'}} 
 			/>
 			<View style={styles.info}>
-				<Text style={{fontWeight: 700}}>{field.name}</Text>
+				<Text>{field.name}</Text>
 				<Text>{field.location}</Text>
 				<Text>$ {field.price}</Text>
 			</View>
@@ -60,6 +59,9 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		backgroundColor: 'white',
 		borderRadius: 3
+	},
+	info: {
+		margin: 5
 	}
 })
 
