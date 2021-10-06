@@ -1,12 +1,11 @@
 import React from 'react'
-import { View, Text, ScrollView, StyleSheet, Button, Image } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Button, Image, TouchableOpacity } from 'react-native'
 import db from '../database/firebase'
 
 const FieldListScreen = ({ navigation }) => {
 	const [ fieldList, setFieldList ] = React.useState([])
 
 	React.useEffect(() => {
-		// Esto es firebase 8 que es bastante pesado y poco intuitivo, expo no soporta 9
 		db.collection('fields').get()
 			.then(querySnapshot => {
 				querySnapshot.forEach(doc => {
@@ -21,10 +20,10 @@ const FieldListScreen = ({ navigation }) => {
 		<View>
 			<Button title="Agregar nuevo potrero" onPress={() => navigation.navigate('Nuevo Potrero')} />
 		</View>
-		{fieldList.map(field => <View 
+		{fieldList.map(field => <TouchableOpacity 
 			key={field.id} 
 			style={styles.fieldCard}
-			onTouchStart={() => navigation.navigate('Detalle de potrero', {
+			onPress={() => navigation.navigate('Detalle de potrero', {
 				fieldId: field.id
 			})}
 		>
@@ -34,10 +33,10 @@ const FieldListScreen = ({ navigation }) => {
 			/>
 			<View style={styles.info}>
 				<Text>{field.name}</Text>
-				<Text>{field.location}</Text>
+				<Text>{field.location[0]} {field.location[1]}</Text>
 				<Text>$ {field.price}</Text>
 			</View>
-		</View>)}
+		</TouchableOpacity>)}
 	</ScrollView>
 }
 

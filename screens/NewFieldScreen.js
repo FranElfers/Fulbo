@@ -10,12 +10,17 @@ import db from '../database/firebase'
 	https://www.npmjs.com/package/react-native-document-picker
 
 	No lo hago ahora porque seguramente no ande en web y todavia no me anda el firebase en mobile
+
+# Geolocation
+	Esto va a ser lo mas dificil de la app xd
+	Voy a tomar referencia de pedidos ya que me gusto como lo hacen
 */
 
 const NewFieldScreen = ({ navigation }) => {
 	const [ form, setForm ] = React.useState({
 		name: '',
-		location: '',
+		latitude: 0.0,
+		longitude: 0.0,
 		price: ''
 	})
 
@@ -26,8 +31,8 @@ const NewFieldScreen = ({ navigation }) => {
 
 		db.collection('fields').add({
 			name: form.name,
-			location: form.location,
-			price: form.price			
+			location: [parseFloat(form.latitude), parseFloat(form.longitude)],
+			price: form.price
 		}).then(docRef => {
 			console.log("Document written with Id", docRef.id)
 		}).catch(err => {
@@ -49,7 +54,8 @@ const NewFieldScreen = ({ navigation }) => {
 			<TextInput placeholder="Nombre" onChangeText={value => handleChange('name',value)} />
 		</View>
 		<View style={styles.inputGroup}>
-			<TextInput placeholder="Ubicacion" onChangeText={value => handleChange('location',value)} />
+			<TextInput keyboardType='numeric' placeholder="Latitud" onChangeText={value => handleChange('latitude',value)} />
+			<TextInput keyboardType='numeric' placeholder="Longitud" onChangeText={value => handleChange('longitude',value)} />
 		</View>
 		<View style={styles.inputGroup}>
 			<TextInput placeholder="Precio por hora" onChangeText={value => handleChange('price',value)} />
@@ -63,12 +69,15 @@ const NewFieldScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		padding: 35,
+		padding: 15,
 	},
 	inputGroup: {
-		flex: 1,
-		padding: 0,
-		marginBottom: 15,
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		paddingLeft: 5,
+		paddingRight: 5,
+		marginBottom: 35,
 		borderBottomWidth: 1,
 		borderBottomColor: '#cccccc'
 	}

@@ -15,7 +15,6 @@ function HomeScreen() {
       },
       headerTintColor: '#fff'
     })}>
-      <Stack.Screen name="Mapa" component={MapScreen} />
       <Stack.Screen name="Potreros" component={FieldListScreen} />
       <Stack.Screen name="Nuevo Potrero" component={NewFieldScreen} />
       <Stack.Screen name="Detalle de potrero" component={FieldDetailScreen} />
