@@ -10,6 +10,7 @@ import db from '../database/firebase'
 	https://www.npmjs.com/package/react-native-document-picker
 
 	No lo hago ahora porque seguramente no ande en web y todavia no me anda el firebase en mobile
+	Update: web dev quedo en el pasado. Firebase ya anda en mobile.
 
 # Geolocation
 	Esto va a ser lo mas dificil de la app xd
@@ -51,14 +52,22 @@ const NewFieldScreen = ({ navigation }) => {
 
 	return <ScrollView style={styles.container}>
 		<View style={styles.inputGroup}>
-			<TextInput placeholder="Nombre" onChangeText={value => handleChange('name',value)} />
+			<View style={styles.field1}>
+				<TextInput placeholder="Nombre" onChangeText={value => handleChange('name',value)} />
+			</View>
 		</View>
 		<View style={styles.inputGroup}>
-			<TextInput keyboardType='numeric' placeholder="Latitud" onChangeText={value => handleChange('latitude',value)} />
-			<TextInput keyboardType='numeric' placeholder="Longitud" onChangeText={value => handleChange('longitude',value)} />
+			<View style={styles.field2}>
+				<TextInput keyboardType='numeric' placeholder="Latitud" onChangeText={value => handleChange('latitude',value)} />
+			</View>
+			<View style={styles.field2}>
+				<TextInput keyboardType='numeric' placeholder="Longitud" onChangeText={value => handleChange('longitude',value)} />
+			</View>
 		</View>
 		<View style={styles.inputGroup}>
-			<TextInput placeholder="Precio por hora" onChangeText={value => handleChange('price',value)} />
+			<View style={styles.field1}>
+				<TextInput placeholder="Precio por hora" onChangeText={value => handleChange('price',value)} />
+			</View>
 		</View>
 		<View>
 			<Button title="Crear nuevo potrero" onPress={saveNewField} />
@@ -74,12 +83,18 @@ const styles = StyleSheet.create({
 	inputGroup: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-around',
+		// justifyContent: 'space-between',
 		paddingLeft: 5,
 		paddingRight: 5,
 		marginBottom: 35,
 		borderBottomWidth: 1,
 		borderBottomColor: '#cccccc'
+	},
+	field1: {
+		width: '100%'
+	},
+	field2: {
+		width: '50%'
 	}
 })
 
