@@ -27,8 +27,8 @@ const FieldDetailScreen = ({ route, navigation }) => {
 			<Text style={styles.coverTitle}>{field.name} | ${field.price}</Text>
 		</View>
 		<View style={styles.container}>
-			<View style={styles.map}>
-				{field.price !== undefined && <MapView 
+			{field.price !== undefined && <View style={styles.map}>
+				<MapView 
 					style={{ flex: 1 }}
 					provider={PROVIDER_GOOGLE}
 					showsUserLocation
@@ -47,8 +47,8 @@ const FieldDetailScreen = ({ route, navigation }) => {
 						}} 
 						image={require('../assets/mini_fulbo_marker.png')}
 					/>
-				</MapView>}
-			</View>
+				</MapView>
+			</View>}
 		</View>
 	</ScrollView>
 }
