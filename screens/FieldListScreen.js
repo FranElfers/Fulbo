@@ -8,9 +8,9 @@ const FieldListScreen = ({ navigation }) => {
 	React.useEffect(() => {
 		db.collection('fields').get()
 			.then(querySnapshot => {
+				setFieldList([])
 				querySnapshot.forEach(doc => {
 					setFieldList(prev => ([...prev, {id:doc.id, ...doc.data()}]))
-					console.log(doc.id, ' => ', doc.data())
 				})
 			})
 			.catch(err => console.log('Error getting documents'))
