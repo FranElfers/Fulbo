@@ -5,6 +5,10 @@ import HomeScreen from './screens/HomeScreen';
 import UserScreen from './screens/UserScreen';
 import MapScreen from './screens/MapScreen';
 import { BallIcon, OptionsIcon, UserIcon } from './SVG';
+import { LogBox } from 'react-native';
+
+// Ignore "long period timer" warning (caused by firebase)
+LogBox.ignoreLogs(['Setting a timer']);
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +24,9 @@ function App() {
     <Tab.Navigator initialRouteName="HomeScreen" screenOptions={({ route }) => ({
       tabBarIcon: () => emojis[route.name],
       tabBarIconStyle: {
-        color: '#fff'
+        color: '#fff',
+        maxHeight: '70%', // no suena muy responsive esto, deberia probarlo en mas dispositivos aunque se que no va a funcionar
+        top: -6
       },
       tabBarStyle: {
         backgroundColor: '#2E3847',
