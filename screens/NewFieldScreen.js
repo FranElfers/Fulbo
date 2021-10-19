@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, ScrollView, TextInput, StyleSheet, Button } from 'react-native'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import db from '../database/firebase'
 
 /*
@@ -15,11 +16,13 @@ import db from '../database/firebase'
 # Geolocation
 	Esto va a ser lo mas dificil de la app xd
 	Voy a tomar referencia de pedidos ya que me gusto como lo hacen
+	Update: uso una vm gratis de aws con un server corriendo puppeteer que geolocaliza con una web
 */
 
 const NewFieldScreen = ({ navigation }) => {
 	const [ form, setForm ] = React.useState({
 		name: '',
+		location: '',
 		latitude: 0.0,
 		longitude: 0.0,
 		price: ''
@@ -40,14 +43,25 @@ const NewFieldScreen = ({ navigation }) => {
 			console.log("Error adding Document", err.message)
 		})
 
-		/* ""firebase 9"""
-		await addDoc(collection(db, 'fields'), {
-			name: form.name,
-			location: form.location,
-			price: form.price
-		})
-		*/
 		navigation.navigate('Potreros')
+	}
+
+	const geolocate = () => {
+		String.prototype.replaceAll = function(search, replacement) {
+			var target = this;
+			return target.replace(new RegExp(search, 'g'), replacement);
+		};
+
+		const url = 'http://ec2-18-228-9-168.sa-east-1.compute.amazonaws.com:3000/geolocate?' + form.location.replaceAll(' ', '+')
+		
+		console.log(url)
+		fetch(url)
+		.then(response => response.json())
+		.then(({ coords }) => {
+			console.log({coords})
+			setForm({ ...form, latitude: parseFloat(coords[0]), longitude: parseFloat(coords[1]) })
+		})
+		.catch(err => console.log(err))
 	}
 
 	return <ScrollView style={styles.container}>
@@ -57,11 +71,32 @@ const NewFieldScreen = ({ navigation }) => {
 			</View>
 		</View>
 		<View style={styles.inputGroup}>
-			<View style={styles.field2}>
-				<TextInput keyboardType='numeric' placeholder="Latitud" onChangeText={value => handleChange('latitude',value)} />
-			</View>
-			<View style={styles.field2}>
-				<TextInput keyboardType='numeric' placeholder="Longitud" onChangeText={value => handleChange('longitude',value)} />
+			<View style={styles.field1} >
+				<TextInput placeholder="ubicacion" onChangeText={value => handleChange('location',value)} />
+				<Text>{form.latitude} {form.longitude}</Text>
+				<Button title="Buscar" onPress={geolocate} />
+				{form.latitude !== 0.0 && <View style={styles.map}>
+					<MapView 
+						style={{ flex: 1 }}
+						provider={PROVIDER_GOOGLE}
+						showsUserLocation
+						scrollEnabled={false}
+						initialRegion={{
+							latitude: form.latitude,
+							longitude: form.longitude,
+							latitudeDelta: 0.00922,
+							longitudeDelta: 0.00421
+						}}
+					>
+						<Marker 
+							coordinate={{
+								latitude: form.latitude,
+								longitude: form.longitude
+							}} 
+							image={require('../assets/mini_fulbo_marker.png')}
+						/>
+					</MapView>
+				</View>}
 			</View>
 		</View>
 		<View style={styles.inputGroup}>
@@ -73,6 +108,18 @@ const NewFieldScreen = ({ navigation }) => {
 			<Button title="Crear nuevo potrero" onPress={saveNewField} />
 		</View>
 	</ScrollView>
+}
+
+const boxShadow = {
+	shadowColor: "#000",
+	shadowOffset: {
+		width: 0,
+		height: 5,
+	},
+	shadowOpacity: 0.34,
+	shadowRadius: 6.27,
+
+	elevation: 10,
 }
 
 const styles = StyleSheet.create({
@@ -95,6 +142,13 @@ const styles = StyleSheet.create({
 	},
 	field2: {
 		width: '50%'
+	},
+	map: {
+		width: 200,
+		height: 200,
+		borderRadius: 15,
+		overflow: 'hidden',
+		...boxShadow
 	}
 })
 
