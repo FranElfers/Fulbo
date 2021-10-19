@@ -6,10 +6,10 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 popup component with field info
 */
 
-function MapScreen() {
+function MapScreen({ navigation }) {
     const [ fieldList, setFieldList ] = React.useState([])
 
-    React.useEffect(() => {
+    const updateFieldList = () => {
         db.collection('fields').get()
             .then(querySnapshot => {
                 querySnapshot.forEach(doc => {
@@ -17,7 +17,14 @@ function MapScreen() {
                 })
             })
             .catch(err => console.log('error getting documents'))
-    }, [])
+    }
+
+    React.useEffect(updateFieldList, [])
+
+	React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', updateFieldList);
+        return unsubscribe;
+    }, [navigation]);
 
     return <MapView 
         style={{ flex: 1 }}
@@ -33,8 +40,8 @@ function MapScreen() {
         {fieldList.map((field, index) => <Marker
             key={index}
             coordinate={{
-                latitude: field.location[0],
-                longitude: field.location[1]
+                latitude: field.coordinates[0],
+                longitude: field.coordinates[1]
             }}
             title={field.name}
             description={'$ ' + field.price}

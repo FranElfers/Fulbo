@@ -5,7 +5,8 @@ import db from '../database/firebase'
 const FieldListScreen = ({ navigation }) => {
 	const [ fieldList, setFieldList ] = React.useState([])
 
-	React.useEffect(() => {
+	const updateFieldList = () => {
+		console.log('updating')
 		db.collection('fields').get()
 			.then(querySnapshot => {
 				setFieldList([])
@@ -14,7 +15,14 @@ const FieldListScreen = ({ navigation }) => {
 				})
 			})
 			.catch(err => console.log('Error getting documents'))
-	}, [])
+	}
+
+	React.useEffect(updateFieldList, [])
+
+	React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', updateFieldList);
+    return unsubscribe;
+  }, [navigation]);
 
 	return <ScrollView style={styles.container}>
 		<View>
@@ -33,7 +41,7 @@ const FieldListScreen = ({ navigation }) => {
 			/>
 			<View style={styles.info}>
 				<Text>{field.name}</Text>
-				<Text>{field.location[0]} {field.location[1]}</Text>
+				<Text>{field.location}</Text>
 				<Text>$ {field.price}</Text>
 			</View>
 		</TouchableOpacity>)}

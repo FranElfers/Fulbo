@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet, ScrollView, Image } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import db from '../database/firebase'
+import SingleMarkerMap from './components/SingleMarkerMap'
 
 const FieldDetailScreen = ({ route, navigation }) => {
 	const [ field, setField ] = React.useState({})
@@ -18,7 +19,7 @@ const FieldDetailScreen = ({ route, navigation }) => {
 
 	React.useEffect(() => {
 		navigation.setOptions({ title: field.name })
-		console.log(field.location)
+		console.log(field.coordinates)
 	}, [field])
 	
 	return <ScrollView>
@@ -27,7 +28,7 @@ const FieldDetailScreen = ({ route, navigation }) => {
 			<Text style={styles.coverTitle}>{field.name} | ${field.price}</Text>
 		</View>
 		<View style={styles.container}>
-			{field.price !== undefined && <View style={styles.map}>
+			{/* {field.price !== undefined && <View style={styles.map}>
 				<MapView 
 					style={{ flex: 1 }}
 					provider={PROVIDER_GOOGLE}
@@ -48,6 +49,9 @@ const FieldDetailScreen = ({ route, navigation }) => {
 						image={require('../assets/mini_fulbo_marker.png')}
 					/>
 				</MapView>
+			</View>} */}
+			{field.price !== undefined && <View style={styles.map}>
+				<SingleMarkerMap style={{ flex: 1 }} coords={field.coordinates} />	
 			</View>}
 		</View>
 	</ScrollView>

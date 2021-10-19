@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, ScrollView, TextInput, StyleSheet, Button } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import db from '../database/firebase'
+import SingleMarkerMap from './components/SingleMarkerMap'
 
 /*
 # How to Upload File/Image to Server
@@ -23,10 +24,10 @@ const NewFieldScreen = ({ navigation }) => {
 	const [ form, setForm ] = React.useState({
 		name: '',
 		location: '',
-		latitude: 0.0,
-		longitude: 0.0,
+		coords: [],
 		price: ''
 	})
+	const [ loading, setLoading ] = React.useState(false)
 
 	const handleChange = (name, val) => setForm({ ...form, [name]: val })
 
@@ -35,7 +36,8 @@ const NewFieldScreen = ({ navigation }) => {
 
 		db.collection('fields').add({
 			name: form.name,
-			location: [parseFloat(form.latitude), parseFloat(form.longitude)],
+			location: form.location,
+			coordinates: form.coords,
 			price: form.price
 		}).then(docRef => {
 			console.log("Document written with Id", docRef.id)
@@ -51,6 +53,7 @@ const NewFieldScreen = ({ navigation }) => {
 			var target = this;
 			return target.replace(new RegExp(search, 'g'), replacement);
 		};
+		setLoading(true)
 
 		const url = 'http://ec2-18-228-9-168.sa-east-1.compute.amazonaws.com:3000/geolocate?' + form.location.replaceAll(' ', '+')
 		
@@ -59,9 +62,13 @@ const NewFieldScreen = ({ navigation }) => {
 		.then(response => response.json())
 		.then(({ coords }) => {
 			console.log({coords})
-			setForm({ ...form, latitude: parseFloat(coords[0]), longitude: parseFloat(coords[1]) })
+			setLoading(false)
+			setForm({ ...form, coords: coords.map(x => parseFloat(x)) })
 		})
-		.catch(err => console.log(err))
+		.catch(err => {
+			console.log(err)
+			setLoading(false)
+		})
 	}
 
 	return <ScrollView style={styles.container}>
@@ -75,27 +82,9 @@ const NewFieldScreen = ({ navigation }) => {
 				<TextInput placeholder="ubicacion" onChangeText={value => handleChange('location',value)} />
 				<Text>{form.latitude} {form.longitude}</Text>
 				<Button title="Buscar" onPress={geolocate} />
-				{form.latitude !== 0.0 && <View style={styles.map}>
-					<MapView 
-						style={{ flex: 1 }}
-						provider={PROVIDER_GOOGLE}
-						showsUserLocation
-						scrollEnabled={false}
-						initialRegion={{
-							latitude: form.latitude,
-							longitude: form.longitude,
-							latitudeDelta: 0.00922,
-							longitudeDelta: 0.00421
-						}}
-					>
-						<Marker 
-							coordinate={{
-								latitude: form.latitude,
-								longitude: form.longitude
-							}} 
-							image={require('../assets/mini_fulbo_marker.png')}
-						/>
-					</MapView>
+				{loading && <Text>Cargando...</Text>}
+				{form.coords.length === 2 && <View style={styles.map}>
+					<SingleMarkerMap style={{ flex: 1}} coords={form.coords} />
 				</View>}
 			</View>
 		</View>
@@ -144,11 +133,13 @@ const styles = StyleSheet.create({
 		width: '50%'
 	},
 	map: {
-		width: 200,
+		width: '100%',
 		height: 200,
+		marginTop: 15,
+		marginBottom: 15,
 		borderRadius: 15,
 		overflow: 'hidden',
-		...boxShadow
+		// ...boxShadow
 	}
 })
 

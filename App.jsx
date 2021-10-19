@@ -43,7 +43,7 @@ function App() {
     })}>
       <Tab.Screen name="HomeScreen" component={HomeScreen} options={() => ({ headerShown: false })} />
       <Tab.Screen name="Mapa" component={MapScreen} />
-      <Tab.Screen name="UserScreen" component={UserScreen} options={{ tabBarBadge: 3 }} />
+      {/* <Tab.Screen name="UserScreen" component={UserScreen} options={{ tabBarBadge: 3 }} /> */}
     </Tab.Navigator>
   </NavigationContainer>
 }
