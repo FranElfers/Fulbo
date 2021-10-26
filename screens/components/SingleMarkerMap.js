@@ -3,7 +3,6 @@ import { Text } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 
 const SingleMarkerMap = ({ style, coords }) => {
-  React.useEffect(() => { console.log(coords)})
   if (coords.length < 2) return <Text>Nothing</Text>
   return <MapView 
     style={style}
