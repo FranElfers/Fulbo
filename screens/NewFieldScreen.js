@@ -83,7 +83,7 @@ const NewFieldScreen = ({ navigation }) => {
 				<Text>{form.latitude} {form.longitude}</Text>
 				<Button title="Buscar" onPress={geolocate} />
 				{loading && <Text>Cargando...</Text>}
-				{form.coords.length === 2 && <View style={styles.map}>
+				{(form.coords.length === 2 && !loading) && <View style={styles.map}>
 					<SingleMarkerMap style={{ flex: 1}} coords={form.coords} />
 				</View>}
 			</View>
