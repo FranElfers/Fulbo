@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Text, ScrollView, StyleSheet, Button, Image, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { Button } from './components/CustomElements'
 import db from '../database/firebase'
 
 const FieldListScreen = ({ navigation }) => {
@@ -28,42 +29,53 @@ const FieldListScreen = ({ navigation }) => {
 		<View>
 			<Button title="Agregar nuevo potrero" onPress={() => navigation.navigate('Nuevo Potrero')} />
 		</View>
-		{fieldList.map(field => <TouchableOpacity 
-			key={field.id} 
-			style={styles.fieldCard}
-			onPress={() => navigation.navigate('Detalle de potrero', {
-				fieldId: field.id
-			})}
-		>
-			<Image 
-				style={styles.fieldImage}
-				source={{uri: 'https://www.haedosrl.com.ar/images/frontend/notfound.png'}} 
-			/>
-			<View style={styles.info}>
-				<Text>{field.name}</Text>
-				<Text>{field.location}</Text>
-				<Text>$ {field.price}</Text>
-			</View>
-		</TouchableOpacity>)}
+		{fieldList.map((field,index) => <>
+			<TouchableOpacity 
+				key={field.id} 
+				style={styles.fieldCard}
+				onPress={() => navigation.navigate('Detalle de potrero', {
+					fieldId: field.id
+				})}
+			>
+				<Image 
+					style={styles.fieldImage}
+					source={{uri: 'https://www.haedosrl.com.ar/images/frontend/notfound.png'}} 
+				/>
+				<View style={styles.info}>
+					<Text>{field.name}</Text>
+					<Text>{field.location}</Text>
+					<Text>$ {field.price}</Text>
+				</View>
+			</TouchableOpacity>
+			{!(index === fieldList.length - 1) && <View style={styles.separator}></View>}
+		</>)}
 	</ScrollView>
 }
 
 const styles = StyleSheet.create({
+	separator: {
+		height: 1, 
+		width: '100%', 
+		backgroundColor: 'lightgrey',
+		marginTop: 7,
+		marginBottom: 7
+	},
 	fieldImage: {
-		width: 60, 
-		height: 60,
+		width: 70, 
+		height: 70,
 		marginRight: 10,
 		borderRadius: 5
 	},
 	container: {
 		flex: 1,
 		padding: 15,
+		backgroundColor: 'white' 
 	},
 	fieldCard: {
 		display: 'flex',
 		flexDirection: 'row',
 		padding: 5,
-		marginTop: 15,
+		// marginTop: 15,
 		backgroundColor: 'white',
 		borderRadius: 3
 	},
