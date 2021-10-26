@@ -47,7 +47,7 @@ const FieldListScreen = ({ navigation }) => {
 					<Text>$ {field.price}</Text>
 				</View>
 			</TouchableOpacity>
-			{!(index === fieldList.length - 1) && <View style={styles.separator}></View>}
+			{index !== fieldList.length - 1 && <View style={styles.separator}></View>}
 		</>)}
 	</ScrollView>
 }
